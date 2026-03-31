@@ -43,9 +43,10 @@ export default function RetailerInsightsDrawer({ retailer, onClose }: Props) {
   const fmrResult = useMemo(() => computeFmrScore(retailer), [retailer]);
   const dimScores = fmrResult.dimension_scores;
 
-  const pct      = parseFloat(retailer.fmr_final_pct) || 0;
-  const band     = retailer.fmr_score_band || "—";
-  const category = retailer.fmr_final_category || "—";
+  // Prefer recomputed values (correct even if sheet columns were out of range)
+  const pct      = fmrResult.fmr_final_pct || parseFloat(retailer.fmr_final_pct) || 0;
+  const band     = fmrResult.fmr_score_band || retailer.fmr_score_band || "—";
+  const category = fmrResult.fmr_final_category || retailer.fmr_final_category || "—";
   const color    = BAND_COLORS[band] ?? "#aaa";
 
   const radarData = FMR_DIMENSIONS.map(dim => ({

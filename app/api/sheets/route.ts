@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const row = SHEET_HEADERS.map(col => {
       if (col in envOut)   return String((envOut as Record<string,unknown>)[col]);
       if (col in fmrOut)   return String((fmrOut as Record<string,unknown>)[col]);
-      if (col in fmrInput) return String(extractScore(fmrInput[col]));
+      if (col in fmrInput) return fmrInput[col];
       if (col === "timestamp") return new Date().toISOString();
       return String(body[col] ?? "");
     });

@@ -63,8 +63,13 @@ function findByLabel<T extends { label: string }>(arr: T[], label: string): T | 
 }
 
 export function extractScore(optionLabel: string): number {
+  if (!optionLabel || optionLabel.trim() === "") return 0;
   const m = optionLabel.match(/\[(\d)\]/);
-  return m ? parseInt(m[1], 10) : 1;
+  if (m) return parseInt(m[1], 10);
+  // Handle plain numeric scores stored by the sheet writer (e.g. "3")
+  const n = parseInt(optionLabel.trim(), 10);
+  if (!isNaN(n) && n >= 1 && n <= 5) return n;
+  return 0;
 }
 
 // ─── Engine 1 ─────────────────────────────────────────────────────────────
