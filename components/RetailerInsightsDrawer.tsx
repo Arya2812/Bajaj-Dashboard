@@ -116,6 +116,28 @@ export default function RetailerInsightsDrawer({ retailer, onClose }: Props) {
           </div>
         </div>
 
+        {/* Overview */}
+        <div className="rounded-2xl p-4 bg-white"
+             style={{ boxShadow: "4px 4px 10px #c8cfd8, -4px -4px 10px #ffffff" }}>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate mb-3">Overview</p>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              ["Opportunity Type",   retailer.fmr_opportunity_type],
+              ["Est. Revenue",       retailer.est_revenue_band],
+              ["Bajaj Potential",    retailer.bajaj_potential_tier],
+              ["Cluster",            retailer.final_environment_cluster],
+              ["Override",           retailer.fmr_override_flag],
+              ["Submitted By",       retailer.submitted_by],
+            ].map(([label, val]) => (
+              <div key={String(label)} className="rounded-xl p-2.5"
+                   style={{ background: "#F0F4F8", boxShadow: "inset 1px 1px 3px #c8cfd8, inset -1px -1px 3px #fff" }}>
+                <p className="text-[10px] uppercase font-semibold tracking-wide text-slate-light">{label}</p>
+                <p className="text-xs font-semibold text-slate mt-0.5 break-words">{val || "—"}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Dimension Scores */}
         <div className="rounded-2xl p-4 bg-white"
              style={{ boxShadow: "4px 4px 10px #c8cfd8, -4px -4px 10px #ffffff" }}>
@@ -233,28 +255,6 @@ export default function RetailerInsightsDrawer({ retailer, onClose }: Props) {
               })}
             </div>
           )}
-        </div>
-
-        {/* Meta Info */}
-        <div className="rounded-2xl p-4 bg-white"
-             style={{ boxShadow: "4px 4px 10px #c8cfd8, -4px -4px 10px #ffffff" }}>
-          <p className="text-xs font-bold uppercase tracking-wide text-slate mb-3">Overview</p>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              ["Opportunity Type",   retailer.fmr_opportunity_type],
-              ["Est. Revenue",       retailer.est_revenue_band],
-              ["Bajaj Potential",    retailer.bajaj_potential_tier],
-              ["Cluster",            retailer.final_environment_cluster],
-              ["Override",           retailer.fmr_override_flag],
-              ["Submitted By",       retailer.submitted_by],
-            ].map(([label, val]) => (
-              <div key={String(label)} className="rounded-xl p-2.5"
-                   style={{ background: "#F0F4F8", boxShadow: "inset 1px 1px 3px #c8cfd8, inset -1px -1px 3px #fff" }}>
-                <p className="text-[10px] uppercase font-semibold tracking-wide text-slate-light">{label}</p>
-                <p className="text-xs font-semibold text-slate mt-0.5 break-words">{val || "—"}</p>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Recommendations */}
