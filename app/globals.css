@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #EBEFF5;
+  --card: #FFFFFF;
+  --cobalt: #0052A3;
+  --cerulean: #2A7ADE;
+  --slate: #3A4750;
+  --slate-light: #6B7A84;
+  --shadow-dark: #c8cfd8;
+  --shadow-light: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--bg);
+  color: var(--slate);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Neumorphic Utilities ───────────────────────────────────────────────── */
+.neu {
+  background: var(--bg);
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  border-radius: 16px;
+}
+
+.neu-sm {
+  background: var(--bg);
+  box-shadow: 3px 3px 7px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
+  border-radius: 10px;
+}
+
+.neu-inset {
+  background: var(--bg);
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+  border-radius: 12px;
+}
+
+.neu-card {
+  background: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(0, 82, 163, 0.08), 0 1px 4px rgba(0,0,0,0.04);
+  border-radius: 16px;
+}
+
+.neu-btn {
+  background: linear-gradient(135deg, #0052A3 0%, #2A7ADE 100%);
+  box-shadow: 4px 4px 10px rgba(0,82,163,0.3), -2px -2px 6px rgba(255,255,255,0.8);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.neu-btn:hover {
+  box-shadow: 6px 6px 14px rgba(0,82,163,0.4), -2px -2px 6px rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+}
+
+.neu-btn:active {
+  box-shadow: inset 3px 3px 6px rgba(0,82,163,0.4), inset -2px -2px 4px rgba(255,255,255,0.6);
+  transform: translateY(0);
+}
+
+.neu-btn-outline {
+  background: var(--bg);
+  box-shadow: 3px 3px 7px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
+  border-radius: 10px;
+  color: var(--cobalt);
+  font-weight: 600;
+  border: 1.5px solid rgba(0,82,163,0.15);
+  transition: all 0.2s ease;
+}
+
+.neu-btn-outline:hover {
+  box-shadow: 4px 4px 9px var(--shadow-dark), -4px -4px 9px var(--shadow-light);
+  border-color: rgba(0,82,163,0.3);
+}
+
+.neu-input {
+  background: var(--bg);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  color: var(--slate);
+  padding: 10px 14px;
+  transition: box-shadow 0.2s ease;
+}
+
+.neu-input:focus {
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light),
+              0 0 0 2px rgba(0,82,163,0.2);
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #c8cfd8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a0adb8; }
+
+/* ── Sidebar ────────────────────────────────────────────────────────────── */
+.sidebar {
+  background: linear-gradient(180deg, #0a2342 0%, #0052A3 60%, #1a3a6b 100%);
+  box-shadow: 4px 0 20px rgba(0,82,163,0.2);
+}
