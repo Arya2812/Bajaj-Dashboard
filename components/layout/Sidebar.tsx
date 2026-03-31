@@ -8,16 +8,41 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 
-const NAV = [
+const MAIN_NAV = [
   { href: "/dashboard",  label: "Overview",      icon: LayoutDashboard },
-  { href: "/form",       label: "Add Retailer",  icon: ClipboardList },
   { href: "/retailers",  label: "All Retailers", icon: Users },
   { href: "/agent",      label: "AI Agent",      icon: Bot },
-  { href: "/settings",   label: "Settings",      icon: Settings },
+  { href: "/form",       label: "Add Retailer",  icon: ClipboardList },
 ];
 
-export default function Sidebar() {
+const SETTINGS_NAV = [
+  { href: "/settings",   label: "Connect Sheet", icon: Settings },
+];
+
+function NavLink({ href, label, icon: Icon, onClick }: { href: string; label: string; icon: React.ElementType; onClick: () => void }) {
   const pathname = usePathname();
+  const active = pathname.startsWith(href) && (href !== "/" || pathname === "/");
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={clsx(
+        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+        active
+          ? "bg-white/20 text-white shadow-inner"
+          : "text-white/60 hover:text-white hover:bg-white/10"
+      )}
+    >
+      <Icon size={18} />
+      {label}
+      {active && (
+        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white/80" />
+      )}
+    </Link>
+  );
+}
+
+export default function Sidebar() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,29 +83,22 @@ export default function Sidebar() {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {NAV.map(({ href, label, icon: Icon }) => {
-            const active = pathname.startsWith(href) && (href !== "/" || pathname === "/");
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={clsx(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                  active
-                    ? "bg-white/20 text-white shadow-inner"
-                    : "text-white/60 hover:text-white hover:bg-white/10"
-                )}
-              >
-                <Icon size={18} />
-                {label}
-                {active && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white/80" />
-                )}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 px-3 py-4 overflow-y-auto">
+          {/* MAIN section */}
+          <p className="text-white/30 text-[10px] font-semibold tracking-widest px-4 mb-1 mt-4">MAIN</p>
+          <div className="space-y-1">
+            {MAIN_NAV.map(({ href, label, icon }) => (
+              <NavLink key={href} href={href} label={label} icon={icon} onClick={() => setOpen(false)} />
+            ))}
+          </div>
+
+          {/* SETTINGS section */}
+          <p className="text-white/30 text-[10px] font-semibold tracking-widest px-4 mb-1 mt-6">SETTINGS</p>
+          <div className="space-y-1">
+            {SETTINGS_NAV.map(({ href, label, icon }) => (
+              <NavLink key={href} href={href} label={label} icon={icon} onClick={() => setOpen(false)} />
+            ))}
+          </div>
         </nav>
 
         {/* Footer */}
