@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Search, RefreshCw, ChevronUp, ChevronDown, X } from "lucide-react";
 import { RetailerRecord } from "@/lib/google-sheets";
 import { BAND_COLORS } from "@/lib/constants";
+import RetailerInsightsDrawer from "@/components/RetailerInsightsDrawer";
 
 type SortDir = "asc" | "desc";
 
@@ -58,7 +59,7 @@ export default function RetailersPage() {
     });
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto" style={{ marginRight: selected ? 440 : 0, transition: "margin-right 0.3s ease" }}>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate">All Retailers</h1>
@@ -163,65 +164,8 @@ export default function RetailersPage() {
         </div>
       )}
 
-      {/* Detail Modal */}
       {selected && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
-          <div className="neu-card p-6 max-w-2xl w-full max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <h2 className="text-xl font-bold text-slate">{selected.retailer_name}</h2>
-                <p className="text-sm text-slate-light">{selected.city}, {selected.state} · {selected.zone} Zone</p>
-              </div>
-              <button onClick={() => setSelected(null)} className="neu-sm p-2">
-                <X size={16} className="text-slate-light" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 mb-5">
-              {[
-                ["Environment Cluster", selected.final_environment_cluster],
-                ["Bajaj Potential",     `${selected.bajaj_potential_tier} (${(parseFloat(selected.bajaj_overall_potential || "0")*100).toFixed(1)}%)`],
-                ["FMR Score",          `${(parseFloat(selected.fmr_final_pct||"0")*100).toFixed(1)}% — ${selected.fmr_score_band}`],
-                ["Final Category",     selected.fmr_final_category],
-                ["Opportunity Type",   selected.fmr_opportunity_type],
-                ["Override Flag",      selected.fmr_override_flag],
-                ["Est. Revenue",       selected.est_revenue_band],
-                ["Submitted By",       selected.submitted_by],
-              ].map(([label, val]) => (
-                <div key={String(label)} className="neu-inset p-3 rounded-xl">
-                  <p className="text-[11px] uppercase font-semibold tracking-wide text-slate-light">{label}</p>
-                  <p className="text-sm font-semibold text-slate mt-0.5 break-words">{val || "—"}</p>
-                </div>
-              ))}
-            </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-light mb-3">Recommendations</p>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  ["External Branding", selected.recommend_external_branding],
-                  ["Internal Branding", selected.recommend_internal_branding],
-                  ["Fixtures",          selected.recommend_fixtures],
-                  ["Digital",           selected.recommend_digital],
-                  ["Premium",           selected.recommend_premium],
-                  ["Lite",              selected.recommend_lite],
-                ].map(([label, val]) => (
-                  <div
-                    key={String(label)}
-                    className="rounded-xl p-2.5 text-center"
-                    style={{
-                      background: val === "Yes" ? "#22C55E11" : "#EBEFF5",
-                      border: `1px solid ${val === "Yes" ? "#22C55E33" : "transparent"}`,
-                    }}
-                  >
-                    <p className="text-[10px] text-slate-light">{label}</p>
-                    <p className="text-sm font-bold mt-0.5" style={{ color: val === "Yes" ? "#16a34a" : "#6B7A84" }}>{val}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <RetailerInsightsDrawer retailer={selected} onClose={() => setSelected(null)} />
       )}
     </div>
   );
