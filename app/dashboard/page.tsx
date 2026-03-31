@@ -140,7 +140,7 @@ export default function DashboardPage() {
     <div className="flex flex-col min-h-screen bg-[#EBEFF5]">
       {/* Sticky top bar */}
       <TopBar
-        title="Analytics Overview"
+        title="Overview"
         count={data.length}
         loading={loading}
         onRefresh={fetchData}
@@ -200,22 +200,22 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
               <KpiCard title="Total Retailers"  value={total}                            icon={Store}      accent="#0052A3" />
               <KpiCard title="Avg Score"        value={`${(avgScore * 100).toFixed(1)}%`} icon={TrendingUp}  accent="#2A7ADE" />
-              <KpiCard title="Top City"         value={topCity}                          icon={MapPin}     accent="#22C55E" sub={`${cityFreq[topCity] ?? 0} retailers`} />
+              <KpiCard title="Top City"         value={cityFreq[topCity] ?? 0}           icon={MapPin}     accent="#22C55E" sub={topCity} />
               <KpiCard title="Total Cities"     value={cityCount}                        icon={Map}        accent="#F59E0B" />
               <KpiCard title="Top Band"         value={topBand}                          icon={BarChart2}  accent={BAND_COLORS[topBand] ?? "#aaa"} />
             </div>
 
             {/* Charts row 1 */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
-              <BandDonut    data={bandData} />
-              <ScoreDistBar data={scoreDist} />
-              <ZoneChart    data={zoneData} />
+              <BandDonut        data={bandData} />
+              <ScoreDistBar     data={scoreDist} />
+              <TopRetailersList retailers={topRetailers} />
             </div>
 
             {/* Charts row 2 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TopRetailersList retailers={topRetailers} />
-              <CityBar data={cityBarData} />
+              <CityBar   data={cityBarData} />
+              <ZoneChart data={zoneData} />
             </div>
           </>
         )}

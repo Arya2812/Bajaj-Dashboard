@@ -52,7 +52,8 @@ export default function TopBar({ title, count, loading, onRefresh, search, onSea
         <button
           onClick={onRefresh}
           disabled={loading}
-          className="neu-btn flex items-center gap-1.5 px-3 py-1.5 text-xs"
+          className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white rounded-xl transition-all disabled:opacity-60"
+          style={{ background: "linear-gradient(135deg, #EF4444 0%, #DC2626 100%)", boxShadow: "4px 4px 10px rgba(239,68,68,0.3), -2px -2px 6px rgba(255,255,255,0.8)" }}
           aria-label="Refresh data"
         >
           <RefreshCw size={13} className={loading ? "animate-spin" : ""} />
