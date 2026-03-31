@@ -4,6 +4,9 @@ import { computeEnvironmentClassification, computeFmrScore, extractScore } from 
 import { FMR_DIMENSIONS } from "@/lib/lookup-tables";
 
 export async function GET() {
+  if (!process.env.GOOGLE_SHEET_ID) {
+    return NextResponse.json({ success: true, data: [], _demo: true });
+  }
   try {
     const rows    = await getAllRetailers();
     const records = rowsToRecords(rows);
@@ -51,12 +54,19 @@ export async function POST(req: NextRequest) {
       return String(body[col] ?? "");
     });
 
-    await appendRetailerRow(row);
+    // Save to Google Sheets only if configured
+    let sheetSaved = false;
+    if (process.env.GOOGLE_SHEET_ID) {
+      await appendRetailerRow(row);
+      sheetSaved = true;
+    }
 
     return NextResponse.json({
       success: true,
       env: envOut,
       fmr: fmrOut,
+      sheetSaved,
+      _demo: !sheetSaved,
     });
   } catch (err) {
     console.error(err);

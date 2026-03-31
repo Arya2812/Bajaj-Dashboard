@@ -39,6 +39,7 @@ export default function FormPage() {
   const [preview,    setPreview] = useState<Record<string, unknown>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted,  setSubmitted]  = useState(false);
+  const [demoMode,   setDemoMode]   = useState(false);
   const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Restore draft
@@ -87,6 +88,7 @@ export default function FormPage() {
       const json = await res.json();
       if (json.success) {
         setSubmitted(true);
+        setDemoMode(!!json._demo);
         localStorage.removeItem(LS_KEY);
       } else alert("Error: " + json.error);
     } catch (e) { alert("Error: " + e); }
@@ -98,8 +100,14 @@ export default function FormPage() {
       <div className="flex flex-col items-center justify-center min-h-screen p-8">
         <div className="neu-card p-10 max-w-md w-full text-center">
           <CheckCircle size={56} className="mx-auto mb-4" style={{ color: "#22C55E" }} />
-          <h2 className="text-2xl font-bold text-slate mb-2">Retailer Saved!</h2>
-          <p className="text-slate-light mb-6">The retailer has been scored and saved to Google Sheets.</p>
+          <h2 className="text-2xl font-bold text-slate mb-2">
+            {demoMode ? "Scores Computed!" : "Retailer Saved!"}
+          </h2>
+          <p className="text-slate-light mb-6">
+            {demoMode
+              ? "Scoring complete. Google Sheets is not connected — add your GOOGLE_SHEET_ID env variable to save data permanently."
+              : "The retailer has been scored and saved to Google Sheets."}
+          </p>
           <div className="flex gap-3 justify-center">
             <button className="neu-btn px-6 py-2.5 text-sm" onClick={() => router.push("/dashboard")}>
               View Dashboard
