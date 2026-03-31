@@ -20,9 +20,9 @@ const COLS: { key: keyof RetailerRecord; label: string }[] = [
   { key: "zone",                 label: "ZONE"        },
   { key: "fmr_final_pct",        label: "SCORE %"     },
   { key: "fmr_score_band",       label: "BAND"        },
-  { key: "fmr_final_category",   label: "CATEGORY"    },
-  { key: "fmr_override_flag",    label: "OVERRIDE"    },
-  { key: "fmr_opportunity_type", label: "OPP. TYPE"   },
+  { key: "final_environment_cluster", label: "CLUSTER"         },
+  { key: "bajaj_potential_tier",      label: "BAJAJ POTENTIAL" },
+  { key: "fmr_opportunity_type",      label: "OPP. TYPE"       },
   { key: "timestamp",            label: "DATE"        },
 ];
 
@@ -96,8 +96,8 @@ export default function RetailersPage() {
       r.zone,
       r.fmr_final_pct ? `${(parseFloat(r.fmr_final_pct) * 100).toFixed(1)}%` : "—",
       r.fmr_score_band,
-      r.fmr_final_category,
-      (!r.fmr_override_flag || r.fmr_override_flag === "No override") ? "—" : r.fmr_override_flag,
+      r.final_environment_cluster,
+      r.bajaj_potential_tier,
       r.fmr_opportunity_type,
       formatDate(r.timestamp),
     ]);
@@ -224,10 +224,6 @@ export default function RetailersPage() {
                   const band  = r.fmr_score_band;
                   const color = BAND_COLORS[band] ?? "#aaa";
                   const pct   = parseFloat(r.fmr_final_pct) || 0;
-                  const override = (!r.fmr_override_flag || r.fmr_override_flag === "No override" || r.fmr_override_flag.trim() === "")
-                    ? null
-                    : r.fmr_override_flag;
-
                   return (
                     <tr
                       key={i}
@@ -260,16 +256,10 @@ export default function RetailersPage() {
                           {band || "—"}
                         </span>
                       </td>
-                      {/* CATEGORY */}
-                      <td className="px-4 py-3 text-xs text-slate">{r.fmr_final_category || "—"}</td>
-                      {/* OVERRIDE */}
-                      <td className="px-4 py-3">
-                        {override ? (
-                          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">{override}</span>
-                        ) : (
-                          <span className="text-slate-light text-xs">—</span>
-                        )}
-                      </td>
+                      {/* CLUSTER */}
+                      <td className="px-4 py-3 text-xs text-slate-light max-w-[180px] truncate">{r.final_environment_cluster || "—"}</td>
+                      {/* BAJAJ POTENTIAL */}
+                      <td className="px-4 py-3 text-xs text-slate">{r.bajaj_potential_tier || "—"}</td>
                       {/* OPP. TYPE */}
                       <td className="px-4 py-3">
                         <span className="text-xs font-bold text-cobalt">{r.fmr_opportunity_type || "—"}</span>
