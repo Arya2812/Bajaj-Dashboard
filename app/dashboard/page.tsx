@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  Store, TrendingUp, MapPin, Map, BarChart2, RefreshCw, ChevronDown,
-} from "lucide-react";
+import { RefreshCw, ChevronDown } from "lucide-react";
 import KpiCard from "@/components/dashboard/KpiCard";
 import BandDonut from "@/components/dashboard/BandDonut";
 import ScoreDistBar from "@/components/dashboard/ScoreDistBar";
@@ -27,7 +25,8 @@ const SCORE_RANGES = [
   { label: "85–100%", min: 0.85, max: 1.01 },
 ];
 
-const PILL_SELECT = "text-xs font-medium bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-slate cursor-pointer outline-none hover:border-cobalt transition-colors appearance-none pr-7";
+const PILL_SELECT =
+  "text-xs font-medium bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-slate cursor-pointer outline-none hover:border-cobalt transition-colors appearance-none pr-7";
 
 interface SelectPillProps {
   value: string;
@@ -70,11 +69,9 @@ export default function DashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Derived filter options
   const allCities     = [...new Set(data.map(r => r.city).filter(Boolean))].sort();
   const allCategories = [...new Set(data.map(r => r.fmr_final_category).filter(Boolean))].sort();
 
-  // Apply filters
   const filtered = data.filter(r => {
     if (filterCity     && r.city               !== filterCity)     return false;
     if (filterZone     && r.zone               !== filterZone)     return false;
@@ -100,13 +97,11 @@ export default function DashboardPage() {
   filtered.forEach(r => { if (r.fmr_score_band) bandFreq[r.fmr_score_band] = (bandFreq[r.fmr_score_band] ?? 0) + 1; });
   const topBand = Object.entries(bandFreq).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
 
-  // Band donut data
   const bandData = BANDS.map(b => ({
     name: b,
     value: filtered.filter(r => r.fmr_score_band === b).length,
   })).filter(d => d.value > 0);
 
-  // Score dist data
   const scoreDist = SCORE_RANGES.map(sr => ({
     range: sr.label,
     count: filtered.filter(r => {
@@ -115,19 +110,16 @@ export default function DashboardPage() {
     }).length,
   }));
 
-  // Top retailers sorted by score
   const topRetailers = [...filtered].sort(
     (a, b) => (parseFloat(b.fmr_final_pct) || 0) - (parseFloat(a.fmr_final_pct) || 0)
   );
 
-  // City bar
   const cityBarData = Object.entries(cityFreq)
     .sort((a, b) => b[1] - a[1])
     .map(([city, count]) => ({ city, count }));
 
-  // Zone chart
   const zoneData = ZONES.map(zone => {
-    const zr = filtered.filter(r => r.zone === zone);
+    const zr  = filtered.filter(r => r.zone === zone);
     const avg = zr.length
       ? zr.reduce((s, r) => s + (parseFloat(r.fmr_final_pct) || 0), 0) / zr.length
       : 0;
@@ -137,8 +129,9 @@ export default function DashboardPage() {
   const hasFilters = !!(filterCity || filterZone || filterBand || filterCategory);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#EBEFF5]">
-      {/* Sticky top bar */}
+    <div className="flex flex-col min-h-screen" style={{ background: "#F0F2F5" }}>
+
+      {/* Top bar */}
       <TopBar
         title="Overview"
         count={data.length}
@@ -150,7 +143,7 @@ export default function DashboardPage() {
 
       {/* Filter bar */}
       <div className="bg-white border-b border-gray-100 px-6 py-2.5 flex items-center gap-3 flex-wrap">
-        <span className="text-xs font-semibold text-slate-light uppercase tracking-wide">Filter:</span>
+        <span className="text-[11px] font-semibold text-slate-light uppercase tracking-widest">Filter:</span>
 
         <SelectPill value={filterCity} onChange={setFilterCity}>
           <option value="">All Cities</option>
@@ -175,7 +168,7 @@ export default function DashboardPage() {
         {hasFilters && (
           <button
             onClick={() => { setFilterCity(""); setFilterZone(""); setFilterBand(""); setFilterCategory(""); }}
-            className="text-xs text-cobalt hover:underline font-medium ml-1"
+            className="text-xs font-semibold text-cobalt hover:underline ml-1"
           >
             Reset
           </button>
@@ -183,37 +176,45 @@ export default function DashboardPage() {
       </div>
 
       {/* Main content */}
-      <div className="px-6 py-5">
+      <div className="flex-1 px-6 py-6 space-y-5">
+
         {error && (
-          <div className="neu-card p-4 mb-6 border border-red-200 bg-red-50 text-red-600 text-sm rounded-xl">
+          <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-4">
             {error}
           </div>
         )}
 
         {loading ? (
           <div className="flex items-center justify-center h-64 text-slate-light">
-            <RefreshCw size={24} className="animate-spin mr-2" /> Loading data...
+            <RefreshCw size={22} className="animate-spin mr-2" />
+            <span className="text-sm">Loading data…</span>
           </div>
         ) : (
           <>
-            {/* KPI Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-              <KpiCard title="Total Retailers"  value={total}                            icon={Store}      accent="#0052A3" />
-              <KpiCard title="Avg Score"        value={`${(avgScore * 100).toFixed(1)}%`} icon={TrendingUp}  accent="#2A7ADE" />
-              <KpiCard title="Top City"         value={cityFreq[topCity] ?? 0}           icon={MapPin}     accent="#22C55E" sub={topCity} />
-              <KpiCard title="Total Cities"     value={cityCount}                        icon={Map}        accent="#F59E0B" />
-              <KpiCard title="Top Band"         value={topBand}                          icon={BarChart2}  accent={BAND_COLORS[topBand] ?? "#aaa"} />
+            {/* ── Row 1: KPI Cards ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              <KpiCard title="Total Retailers"  value={total}                             accent="#0052A3" />
+              <KpiCard title="Avg Score"        value={`${(avgScore * 100).toFixed(1)}%`} accent="#2A7ADE" />
+              <KpiCard title="Top City"         value={cityFreq[topCity] ?? 0}            accent="#22C55E" sub={topCity} />
+              <KpiCard title="Total Cities"     value={cityCount}                         accent="#F59E0B" />
+              <KpiCard title="Top Band"         value={topBand}                           accent={BAND_COLORS[topBand] ?? "#aaa"} />
             </div>
 
-            {/* Charts row 1 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
-              <BandDonut        data={bandData} />
-              <ScoreDistBar     data={scoreDist} />
-              <TopRetailersList retailers={topRetailers} />
+            {/* ── Row 2: Hero chart + Top Retailers ── */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+              {/* Score area chart spans 2/3 */}
+              <div className="xl:col-span-2">
+                <ScoreDistBar data={scoreDist} />
+              </div>
+              {/* Top retailers panel */}
+              <div className="xl:col-span-1">
+                <TopRetailersList retailers={topRetailers} />
+              </div>
             </div>
 
-            {/* Charts row 2 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* ── Row 3: Band donut + City bar + Zone chart ── */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <BandDonut data={bandData} />
               <CityBar   data={cityBarData} />
               <ZoneChart data={zoneData} />
             </div>
