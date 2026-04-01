@@ -51,7 +51,6 @@ export default function DashboardPage() {
   const [error, setError]     = useState("");
   const [search, setSearch]   = useState("");
 
-  const [filterCity,     setFilterCity]     = useState("");
   const [filterZone,     setFilterZone]     = useState("");
   const [filterBand,     setFilterBand]     = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -69,11 +68,9 @@ export default function DashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const allCities     = [...new Set(data.map(r => r.city).filter(Boolean))].sort();
   const allCategories = [...new Set(data.map(r => r.fmr_final_category).filter(Boolean))].sort();
 
   const filtered = data.filter(r => {
-    if (filterCity     && r.city               !== filterCity)     return false;
     if (filterZone     && r.zone               !== filterZone)     return false;
     if (filterBand     && r.fmr_score_band     !== filterBand)     return false;
     if (filterCategory && r.fmr_final_category !== filterCategory) return false;
@@ -126,7 +123,7 @@ export default function DashboardPage() {
     return { zone, count: zr.length, avg_score: Math.round(avg * 1000) / 1000 };
   });
 
-  const hasFilters = !!(filterCity || filterZone || filterBand || filterCategory);
+  const hasFilters = !!(filterZone || filterBand || filterCategory);
 
   return (
     <div className="flex flex-col min-h-screen" style={{ background: "#F0F2F5" }}>
@@ -145,11 +142,6 @@ export default function DashboardPage() {
       <div className="bg-white border-b border-gray-100 px-6 py-2.5 flex items-center gap-3 flex-wrap">
         <span className="text-[11px] font-semibold text-slate-light uppercase tracking-widest">Filter:</span>
 
-        <SelectPill value={filterCity} onChange={setFilterCity}>
-          <option value="">All Cities</option>
-          {allCities.map(c => <option key={c} value={c}>{c}</option>)}
-        </SelectPill>
-
         <SelectPill value={filterZone} onChange={setFilterZone}>
           <option value="">All Zones</option>
           {ZONES.map(z => <option key={z} value={z}>{z}</option>)}
@@ -167,7 +159,7 @@ export default function DashboardPage() {
 
         {hasFilters && (
           <button
-            onClick={() => { setFilterCity(""); setFilterZone(""); setFilterBand(""); setFilterCategory(""); }}
+            onClick={() => { setFilterZone(""); setFilterBand(""); setFilterCategory(""); }}
             className="text-xs font-semibold text-cobalt hover:underline ml-1"
           >
             Reset
@@ -200,19 +192,13 @@ export default function DashboardPage() {
               <KpiCard title="Top Band"         value={topBand}                           accent={BAND_COLORS[topBand] ?? "#aaa"} />
             </div>
 
-            {/* ── Row 2: Hero chart + Top Retailers ── */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-              {/* Score area chart spans 2/3 */}
-              <div className="xl:col-span-2">
-                <ScoreDistBar data={scoreDist} />
-              </div>
-              {/* Top retailers panel */}
-              <div className="xl:col-span-1">
-                <TopRetailersList retailers={topRetailers} />
-              </div>
-            </div>
+            {/* ── Row 2: Score Distribution — full width ── */}
+            <ScoreDistBar data={scoreDist} />
 
-            {/* ── Row 3: Band donut + City bar + Zone chart ── */}
+            {/* ── Row 3: Top Retailers carousel — full width ── */}
+            <TopRetailersList retailers={topRetailers} />
+
+            {/* ── Row 4: Band donut + City bar + Zone chart ── */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <BandDonut data={bandData} />
               <CityBar   data={cityBarData} />

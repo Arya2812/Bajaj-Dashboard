@@ -9,7 +9,7 @@ export default function ScoreDistBar({ data }: Props) {
   return (
     <div
       className="bg-white rounded-2xl p-5"
-      style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)", height: 300 }}
+      style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)", height: 280 }}
     >
       <div className="flex items-center justify-between mb-1">
         <p className="text-sm font-semibold text-slate">Score Distribution</p>
