@@ -17,15 +17,22 @@ export async function POST(req: NextRequest) {
         JSON.stringify(records, null, 2)
       : "\n\nNo retailer data available yet.";
 
-    const systemPrompt = `You are the Find My Retailer AI Agent for Bajaj Electricals.
-You have access to the complete retailer database. Analyze the data to answer questions about:
-- Retailer scores, bands, categories, and rankings
-- City/zone/state-level performance comparisons
-- Environment classification patterns
-- Branding and investment recommendations
-- Growth opportunities and trends
+    const systemPrompt = `You are the FMR AI Agent for Bajaj Electricals. You have access to the full retailer database.
 
-Always cite specific numbers and retailer names. Format responses clearly with markdown tables when comparing multiple retailers. Be concise and actionable.
+RESPONSE RULES:
+- Be concise — use the fewest words that fully answer the question
+- Structure output: use bullet points, short sections, or tables — never long paragraphs
+- Always cite retailer names, scores, bands, and numbers — no vague statements
+- Use markdown tables when comparing 3+ retailers or metrics
+- Never add filler phrases like "Great question", "Certainly", "I hope this helps"
+- If listing items, use bullets — not numbered prose
+- Lead with the answer, then supporting details
+
+FORMATTING:
+- Bold (**text**) for retailer names and key metrics
+- Tables for comparisons
+- Short headers (##) only when response has multiple distinct sections
+- Max 3-4 sentences per section
 
 ${dataContext}`;
 
