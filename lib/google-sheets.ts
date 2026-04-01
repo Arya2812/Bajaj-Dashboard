@@ -71,6 +71,9 @@ export function rowsToRecords(rows: string[][]): RetailerRecord[] {
   return dataRows.map(row => {
     const rec: RetailerRecord = {};
     SHEET_HEADERS.forEach((h, i) => { rec[h] = row[i] ?? ""; });
+    // Normalize fmr_final_pct: sheet may store as percentage (85.54) instead of decimal (0.8554)
+    const raw = parseFloat(rec["fmr_final_pct"]);
+    if (!isNaN(raw) && raw > 1) rec["fmr_final_pct"] = String(raw / 100);
     return rec;
   });
 }
