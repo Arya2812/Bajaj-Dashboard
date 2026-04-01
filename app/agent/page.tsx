@@ -54,8 +54,8 @@ function MarkdownBlock({ content }: { content: string }) {
       i++; continue;
     }
 
-    // Markdown table
-    if (line.startsWith("|") && lines[i + 1]?.startsWith("|---")) {
+    // Markdown table — handle both |---| and | --- | separator formats
+    if (line.startsWith("|") && /^\|[\s\-|]+\|/.test(lines[i + 1] ?? "")) {
       const headers = line.split("|").filter(Boolean).map(h => h.trim());
       i += 2; // skip header + separator
       const rows: string[][] = [];
