@@ -4,15 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  LayoutDashboard, ClipboardList, Users, Bot, Settings, Menu, X, Zap,
+  LayoutDashboard, ClipboardList, Users, Bot, Settings, Menu, X, Zap, Layers,
 } from "lucide-react";
 import clsx from "clsx";
 
 const MAIN_NAV = [
-  { href: "/dashboard",  label: "Overview",      icon: LayoutDashboard },
-  { href: "/retailers",  label: "All Retailers", icon: Users },
-  { href: "/agent",      label: "AI Agent",      icon: Bot },
-  { href: "/form",       label: "Add Retailer",  icon: ClipboardList },
+  { href: "/dashboard",   label: "Overview",      icon: LayoutDashboard },
+  { href: "/environment", label: "Environment",   icon: Layers },
+  { href: "/retailers",   label: "All Retailers", icon: Users },
+  { href: "/agent",       label: "AI Agent",      icon: Bot },
+  { href: "/form",        label: "Add Retailer",  icon: ClipboardList },
 ];
 
 const SETTINGS_NAV = [

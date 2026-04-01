@@ -180,6 +180,44 @@ export function computeEnvironmentClassification(
   };
 }
 
+// ─── Engine 1b — Environment Dimension Scores (individual) ───────────────
+
+export interface EnvDimensionScores {
+  category_opportunity: number;  // 0–5
+  display_potential:    number;
+  visibility_potential: number;
+  consumer_influence:   number;
+  growth_headroom:      number;
+  catchment_power:      number;
+}
+
+export function computeEnvDimensionScores(
+  input: EnvClassificationInput
+): EnvDimensionScores | null {
+  const prim   = findByLabel(PRIMARY_ORIENTATION,   input.primary_orientation);
+  const sec    = findByLabel(SECONDARY_ORIENTATION, input.secondary_orientation);
+  const fmt    = findByLabel(STORE_FORMAT,          input.store_format);
+  const disp   = findByLabel(DISPLAY_STRUCTURE,     input.display_structure);
+  const cust   = findByLabel(CUSTOMER_TYPE,         input.customer_type);
+  const sell   = findByLabel(SELLING_BEHAVIOR,      input.selling_behavior);
+  const size   = findByLabel(STORE_SIZE,            input.store_size_band);
+  const brand  = findByLabel(BRAND_PRESENCE,        input.brand_presence);
+  const catd   = findByLabel(CATEGORY_DEPTH,        input.category_depth);
+  const catch_ = findByLabel(CATCHMENT_POWER,       input.catchment_power);
+
+  if (!prim || !sec || !fmt || !disp || !cust || !sell || !size || !brand || !catd || !catch_) {
+    return null;
+  }
+  return {
+    category_opportunity: prim.category_score * 0.50 + sec.category_score * 0.20 + catd.category_score * 0.30,
+    display_potential:    disp.display_score   * 0.60 + size.display_score   * 0.40,
+    visibility_potential: fmt.visibility_score * 0.50 + brand.visibility_score * 0.50,
+    consumer_influence:   cust.influence_score * 0.45 + sell.influence_score   * 0.55,
+    growth_headroom:      sec.headroom_score   * 0.35 + brand.headroom_score   * 0.35 + (6 - catd.category_score) * 0.30,
+    catchment_power:      catch_.catchment_score,
+  };
+}
+
 // ─── Engine 2 ─────────────────────────────────────────────────────────────
 
 export function computeFmrScore(input: FmrInput): FmrOutput {
