@@ -25,6 +25,7 @@ export interface EnvClassificationInput {
 }
 
 export interface EnvClassificationOutput {
+  [key: string]: string | number;
   environment_family: string;
   format_archetype: string;
   engagement_mode: string;
@@ -40,6 +41,7 @@ export interface FmrInput {
 }
 
 export interface FmrOutput {
+  [key: string]: string | number | Record<string, number>;
   dimension_scores: Record<string, number>;
   fmr_final_pct: number;
   fmr_score_band: string;
