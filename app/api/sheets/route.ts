@@ -46,9 +46,11 @@ export async function POST(req: NextRequest) {
     const fmrOut = computeFmrScore(fmrInput);
 
     // ── Build row in sheet column order ──────────────────────────────────
+    const envOutMap = envOut as unknown as Record<string, unknown>;
+    const fmrOutMap = fmrOut as unknown as Record<string, unknown>;
     const row = SHEET_HEADERS.map(col => {
-      if (col in envOut)   return String((envOut as Record<string,unknown>)[col]);
-      if (col in fmrOut)   return String((fmrOut as Record<string,unknown>)[col]);
+      if (Object.prototype.hasOwnProperty.call(envOutMap, col)) return String(envOutMap[col]);
+      if (Object.prototype.hasOwnProperty.call(fmrOutMap, col)) return String(fmrOutMap[col]);
       if (col in fmrInput) return fmrInput[col];
       if (col === "timestamp") return new Date().toISOString();
       return String(body[col] ?? "");
