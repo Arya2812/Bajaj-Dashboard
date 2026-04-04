@@ -170,7 +170,7 @@ export default function EnvironmentPage() {
     .map(([fullName, { count, potSum }]) => ({
       name:         fullName.length > 38 ? fullName.slice(0, 36) + "…" : fullName,
       count,
-      avgPotential: Math.round((potSum / count) * 1000) / 10,
+      avgPotential: Math.round((potSum / count) * 10) / 10,
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 8);
@@ -205,8 +205,8 @@ export default function EnvironmentPage() {
   const hasFilters = !!(filterZone || filterBand || filterCategory);
 
   const potColor =
-    avgPotential >= 0.65 ? "#22C55E" :
-    avgPotential >= 0.50 ? "#F59E0B" : "#EF4444";
+    avgPotential >= 65 ? "#22C55E" :
+    avgPotential >= 50 ? "#F59E0B" : "#EF4444";
 
   return (
     <div className="flex flex-col min-h-screen" style={{ background: "#F0F2F5" }}>
@@ -268,7 +268,7 @@ export default function EnvironmentPage() {
               />
               <KpiCard
                 title="Avg Outlet Potential"
-                value={`${(avgPotential * 100).toFixed(1)}%`}
+                value={`${avgPotential.toFixed(1)}%`}
                 accent={potColor}
                 sub={topEntry(tierFreq)}
               />
