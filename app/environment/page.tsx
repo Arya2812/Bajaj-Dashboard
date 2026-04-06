@@ -167,11 +167,15 @@ export default function EnvironmentPage() {
     clusterMap[c].potSum += parseFloat(r.bajaj_overall_potential) || 0;
   });
   const clusterData = Object.entries(clusterMap)
-    .map(([fullName, { count, potSum }]) => ({
-      name:         fullName.length > 38 ? fullName.slice(0, 36) + "…" : fullName,
-      count,
-      avgPotential: Math.round((potSum / count) * 10) / 10,
-    }))
+    .map(([fullName, { count, potSum }]) => {
+      const firstSegment = fullName.split(" | ")[0].trim();
+      return {
+        name:         firstSegment.length > 32 ? firstSegment.slice(0, 30) + "…" : firstSegment,
+        fullName,
+        count,
+        avgPotential: Math.round((potSum / count) * 10) / 10,
+      };
+    })
     .sort((a, b) => b.count - a.count)
     .slice(0, 8);
 
@@ -330,7 +334,7 @@ export default function EnvironmentPage() {
                       type="category"
                       dataKey="name"
                       tick={{ fontSize: 10, fill: "#3A4750" }}
-                      width={230}
+                      width={180}
                       axisLine={false}
                       tickLine={false}
                     />
@@ -344,6 +348,10 @@ export default function EnvironmentPage() {
                       formatter={(val: number, name: string) =>
                         [val, name === "count" ? "Outlets" : "Avg Potential %"]
                       }
+                      labelFormatter={(label: string, payload) => {
+                        const full = payload?.[0]?.payload?.fullName;
+                        return full ?? label;
+                      }}
                     />
                     <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={20}>
                       {clusterData.map((_, i) => (
