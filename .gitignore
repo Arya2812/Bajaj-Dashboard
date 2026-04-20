@@ -12,6 +12,8 @@ node_modules/
 
 # Production
 /build
+/dist
+/dist-server
 
 # Env files
 .env
